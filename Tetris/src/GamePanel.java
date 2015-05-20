@@ -20,7 +20,10 @@ public class GamePanel extends JPanel implements KeyListener
 		addKeyListener(this);
 		setFocusable(true);
 		board = new ArrayList<Piece>();
-		board.add(new SPiece(0, 18));
+		
+		Piece p = new JPiece(0, 10);
+		currentPiece = p;
+		board.add(p);
 		
 		Thread game = new Thread()
 		{
@@ -76,11 +79,16 @@ public class GamePanel extends JPanel implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		if (arg0.getKeyCode() == KeyEvent.VK_SPACE)
+		switch (arg0.getKeyCode())
 		{
+		case KeyEvent.VK_SPACE:
 			boardTick();
+			break;
+		case KeyEvent.VK_Z:
+			currentPiece.rotateCW(board);
+			break;
 		}
-		repaint(0);
+		repaint();
 	}
 
 	@Override

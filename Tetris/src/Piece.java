@@ -37,7 +37,7 @@ public abstract class Piece
 			int[] blockPos = new int[] { coords[index][0] + x,
 					coords[index][1] + y };
 
-			if (blockPos[1] == 0)
+			if (blockPos[1] == 1)
 				return true;
 
 			for (Piece p : pieces)
@@ -89,7 +89,7 @@ public abstract class Piece
 		}
 	}
 
-	public abstract void rotateCW();
+	public abstract void rotateCW(ArrayList<Piece> board);
 
-	public abstract void rotateCCW();
+	public abstract void rotateCCW(ArrayList<Piece> board);
 }
