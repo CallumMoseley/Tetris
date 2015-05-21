@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class TPiece extends Piece
 {
@@ -6,10 +7,10 @@ public class TPiece extends Piece
 	{
 		super(x, y);
 		coords = new int[][] {{0, 1}, {1, 1}, {1, 2}, {2, 1}};
-		colour = Color.MAGENTA;
+		colour = Color.MAGENTA.darker().darker();
 	}
 	
-	public void rotateCW()
+	public void rotateCW(ArrayList<Piece> board)
 	{
 		for (int index = 0; index < 4; index++)
 		{
@@ -19,7 +20,7 @@ public class TPiece extends Piece
 		}
 	}
 
-	public void rotateCCW()
+	public void rotateCCW(ArrayList<Piece> board)
 	{
 		for (int index = 0; index < 4; index++)
 		{

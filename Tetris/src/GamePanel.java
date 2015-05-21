@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements KeyListener
 		setFocusable(true);
 		board = new ArrayList<Piece>();
 		
-		Piece p = new JPiece(0, 10);
+		Piece p = new IPiece(0, 10);
 		currentPiece = p;
 		board.add(p);
 		

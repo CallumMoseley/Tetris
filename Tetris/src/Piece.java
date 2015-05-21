@@ -8,6 +8,9 @@ public abstract class Piece
 	protected int y;
 
 	protected int[][] coords;
+	protected int[][][] kicks;
+	
+	protected int rotation;
 
 	protected Color colour;
 
@@ -15,6 +18,16 @@ public abstract class Piece
 	{
 		this.x = x;
 		this.y = y;
+		rotation = 0;
+
+		kicks = new int[][][] { { { 0, 0 }, { -1, 0 }, { -1,  1 }, { 0, -2 }, { -1, -2 } } ,
+				 			    { { 0, 0 }, {  1, 0 }, {  1, -1 }, { 0,  2 }, {  1,  2 } } ,
+				 			    { { 0, 0 }, {  1, 0 }, {  1, -1 }, { 0,  2 }, {  1,  2 } } ,
+				 			    { { 0, 0 }, { -1, 0 }, { -1,  1 }, { 0, -2 }, { -1, -2 } } ,
+				 			    { { 0, 0 }, {  1, 0 }, {  1,  1 }, { 0, -2 }, {  1, -2 } } ,
+				 			    { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0,  2 }, { -1,  2 } } ,
+				 			    { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0,  2 }, { -1,  2 } } ,
+				 			    { { 0, 0 }, {  1, 0 }, {  1,  1 }, { 0, -2 }, {  1, -2 } }};
 	}
 
 	public void fall()
@@ -32,12 +45,12 @@ public abstract class Piece
 
 	public boolean onGround(ArrayList<Piece> pieces)
 	{
- 		for (int index = 0; index < 4; index++)
+		for (int index = 0; index < 4; index++)
 		{
 			int[] blockPos = new int[] { coords[index][0] + x,
 					coords[index][1] + y };
 
-			if (blockPos[1] == 1)
+			if (blockPos[1] <= 1)
 				return true;
 
 			for (Piece p : pieces)
@@ -49,7 +62,7 @@ public abstract class Piece
 						int[][] coords2 = p.getCoords();
 						int[] block2Pos = new int[] { coords2[index2][0],
 								coords2[index2][1] };
-	
+
 						if (blockPos[0] == block2Pos[0]
 								&& blockPos[1] - 1 == block2Pos[1])
 						{
@@ -61,6 +74,14 @@ public abstract class Piece
 		}
 
 		return false;
+	}
+	
+	public boolean coincides(int x, int y)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int[] blockPos = new int[] { coords[i][0] + x, coords[i][1] + y };
+		}
 	}
 
 	public int getX()
@@ -82,8 +103,9 @@ public abstract class Piece
 	{
 		for (int index = 0; index < 4; index++)
 		{
-			int[] blockPos = new int[] { coords[index][0] + x, coords[index][1] + y };
-			
+			int[] blockPos = new int[] { coords[index][0] + x,
+					coords[index][1] + y };
+
 			g.setColor(colour);
 			g.fillRect(blockPos[0] * 16, 320 - blockPos[1] * 16, 16, 16);
 		}
@@ -92,4 +114,25 @@ public abstract class Piece
 	public abstract void rotateCW(ArrayList<Piece> board);
 
 	public abstract void rotateCCW(ArrayList<Piece> board);
+	
+	public static int kickIndex(int from, int to)
+	{
+		if (from == 0)
+		{
+			return (to == 1) ? 0 : 7;
+		}
+		if (from == 1)
+		{
+			return (to == 0) ? 1 : 2;
+		}
+		if (from == 2)
+		{
+			return (to == 1) ? 3 : 4;
+		}
+		if (from == 3)
+		{
+			return (to == 2) ? 5 : 6;
+		}
+		return 0;
+	}
 }

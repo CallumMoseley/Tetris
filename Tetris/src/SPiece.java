@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class SPiece extends Piece
 {
@@ -9,7 +10,7 @@ public class SPiece extends Piece
 		colour = Color.GREEN;
 	}
 	
-	public void rotateCW()
+	public void rotateCW(ArrayList<Piece> board)
 	{
 		for (int index = 0; index < 4; index++)
 		{
@@ -19,7 +20,7 @@ public class SPiece extends Piece
 		}
 	}
 
-	public void rotateCCW()
+	public void rotateCCW(ArrayList<Piece> board)
 	{
 		for (int index = 0; index < 4; index++)
 		{
