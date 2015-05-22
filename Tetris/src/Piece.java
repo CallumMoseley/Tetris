@@ -117,21 +117,38 @@ public abstract class Piece
 			g.fillRect(blockPos[0] * 16, 320 - blockPos[1] * 16, 16, 16);
 		}
 	}
+	
+	public void moveRight(ArrayList<Piece> board)
+	{
+		x++;
+		if (checkCollision(board))
+		{
+			x--;
+		}
+	}
+	
+	public void moveLeft(ArrayList<Piece> board)
+	{
+		x--;
+		if (checkCollision(board))
+		{
+			x++;
+		}
+	}
 
 	public void rotateCW(ArrayList<Piece> board)
 	{
 		boolean positionFound = false;
 		int kickIndex = Piece.kickIndex(rotation, (rotation + 1) % 4);
 		int kickI = 0;
+		for (int index = 0; index < 4; index++)
+		{
+			int temp = coords[index][0];
+			coords[index][0] = coords[index][1];
+			coords[index][1] = turnVar - temp;
+		}
 		while (!positionFound)
 		{
-			for (int index = 0; index < 4; index++)
-			{
-				int temp = coords[index][0];
-				coords[index][0] = coords[index][1];
-				coords[index][1] = turnVar - temp;
-			}
-			
 			boolean collision = false;
 			for (Piece p : board)
 			{
@@ -140,7 +157,7 @@ public abstract class Piece
 					int blockX = coords[i][0] + x + kicks[kickIndex][kickI][0];
 					int blockY = coords[i][1] + y + kicks[kickIndex][kickI][1];
 					
-					if (p.coincides(blockX, blockY) || blockX < 0 || blockY < 1 || blockX > 9)
+					if ((p != this && p.coincides(blockX, blockY)) || blockX < 0 || blockY < 1 || blockX > 9)
 					{
 						collision = true;
 					}
@@ -180,17 +197,16 @@ public abstract class Piece
 	public void rotateCCW(ArrayList<Piece> board)
 	{
 		boolean positionFound = false;
-		int kickIndex = Piece.kickIndex(rotation, (rotation + 1) % 4);
+		int kickIndex = Piece.kickIndex(rotation, (rotation + 3) % 4);
 		int kickI = 0;
+		for (int index = 0; index < 4; index++)
+		{
+			int temp = coords[index][0];
+			coords[index][0] = turnVar - coords[index][1];
+			coords[index][1] = temp;
+		}
 		while (!positionFound)
 		{
-			for (int index = 0; index < 4; index++)
-			{
-				int temp = coords[index][0];
-				coords[index][0] = turnVar - coords[index][1];
-				coords[index][1] = temp;
-			}
-			
 			boolean collision = false;
 			for (Piece p : board)
 			{
@@ -199,7 +215,7 @@ public abstract class Piece
 					int blockX = coords[i][0] + x + kicks[kickIndex][kickI][0];
 					int blockY = coords[i][1] + y + kicks[kickIndex][kickI][1];
 					
-					if (p.coincides(blockX, blockY) || blockX < 0 || blockY < 1 || blockX > 9)
+					if ((p != this && p.coincides(blockX, blockY)) || blockX < 0 || blockY < 1 || blockX > 9)
 					{
 						collision = true;
 					}
@@ -223,7 +239,7 @@ public abstract class Piece
 		}
 		if (positionFound)
 		{
-			rotation = (rotation + 1) % 4;
+			rotation = (rotation + 3) % 4;
 		}
 		else
 		{
@@ -234,6 +250,27 @@ public abstract class Piece
 				coords[index][1] = turnVar - temp;
 			}
 		}
+	}
+	
+	public boolean checkCollision(ArrayList<Piece> board)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int blockX = coords[i][0] + x;
+			int blockY = coords[i][1] + y;
+			if (blockX < 0 || blockX > 9 || blockY < 1)
+			{
+				return true;
+			}
+			for (Piece p : board)
+			{
+				if (p != this && p.coincides(blockX, blockY))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public static int kickIndex(int from, int to)

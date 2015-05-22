@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements KeyListener
 		setFocusable(true);
 		board = new ArrayList<Piece>();
 		
-		Piece p = new IPiece(0, 10);
+		Piece p = new SPiece(0, 10);
 		currentPiece = p;
 		board.add(p);
 		
@@ -81,11 +81,23 @@ public class GamePanel extends JPanel implements KeyListener
 	{
 		switch (arg0.getKeyCode())
 		{
-		case KeyEvent.VK_SPACE:
-			boardTick();
-			break;
 		case KeyEvent.VK_Z:
 			currentPiece.rotateCW(board);
+			break;
+		case KeyEvent.VK_X:
+			currentPiece.rotateCCW(board);
+			break;
+		case KeyEvent.VK_UP:
+			currentPiece.drop(board);
+			break;
+		case KeyEvent.VK_DOWN:
+			boardTick();
+			break;
+		case KeyEvent.VK_RIGHT:
+			currentPiece.moveRight(board);
+			break;
+		case KeyEvent.VK_LEFT:
+			currentPiece.moveLeft(board);
 			break;
 		}
 		repaint();
