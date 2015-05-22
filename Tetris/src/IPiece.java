@@ -15,35 +15,7 @@ public class IPiece extends Piece
 				 			    { { 0, 0 }, { -2, 0 }, {  1, 0 }, { -2, -1 }, {  1,  2 } } ,
 				 			    { { 0, 0 }, {  1, 0 }, { -2, 0 }, {  1, -2 }, { -2,  1 } } ,
 				 			    { { 0, 0 }, { -1, 0 }, {  2, 0 }, { -1,  2 }, {  2, -1 } } };
+		turnVar = 3;
 		colour = Color.CYAN;
-	}
-
-	public void rotateCW(ArrayList<Piece> board)
-	{
-		boolean positionFound = false;
-		while (!positionFound)
-		{
-			for (int index = 0; index < 4; index++)
-			{
-				int temp = coords[index][0];
-				coords[index][0] = coords[index][1];
-				coords[index][1] = 3 - temp;
-			}
-			
-			for (Piece p : board)
-			{
-				
-			}
-		}
-	}
-
-	public void rotateCCW(ArrayList<Piece> board)
-	{
-		for (int index = 0; index < 4; index++)
-		{
-			int temp = coords[index][0];
-			coords[index][0] = 3 - coords[index][1];
-			coords[index][1] = temp;
-		}
 	}
 }
