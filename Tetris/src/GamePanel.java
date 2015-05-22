@@ -4,36 +4,40 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements KeyListener
 {
+	private static final int MOVE_DELAY = 10000000;
+	
 	private boolean running;
-
 	private ArrayList<Piece> board;
 	private Piece currentPiece;
+	private boolean[] keys;
+	
+	private int moveDelay;
 
 	public GamePanel()
 	{
 		setPreferredSize(new Dimension(160, 320));
 		addKeyListener(this);
 		setFocusable(true);
-		board = new ArrayList<Piece>();
+
+		keys = new boolean[KeyEvent.KEY_LAST + 1];
+		moveDelay = 0;
 		
-		Piece p = new SPiece(0, 10);
+		board = new ArrayList<Piece>();
+		Piece p = new LPiece(0, 10);
 		currentPiece = p;
 		board.add(p);
 		
-		Thread game = new Thread()
-		{
+		Thread game = new Thread() {
 			@Override
 			public void run()
 			{
 				gameLoop();
 			}
 		};
-		
 		game.start();
 	}
 
@@ -52,7 +56,6 @@ public class GamePanel extends JPanel implements KeyListener
 	{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 160, 320);
-
 		for (Piece p : board)
 		{
 			p.draw(g);
@@ -64,14 +67,36 @@ public class GamePanel extends JPanel implements KeyListener
 		long lastTick = System.currentTimeMillis();
 		while (true)
 		{
-			try
+			if (keys[KeyEvent.VK_UP])
 			{
-				Thread.sleep(Math.max(
-						1000 - (System.currentTimeMillis() - lastTick), 0));
+				currentPiece.drop(board);
 			}
-			catch (InterruptedException e)
+			if (keys[KeyEvent.VK_DOWN])
 			{
-				e.printStackTrace();
+				boardTick();
+			}
+			if (keys[KeyEvent.VK_RIGHT] && moveDelay == 0)
+			{
+				currentPiece.moveRight(board);
+				moveDelay = MOVE_DELAY;
+			}
+			if (keys[KeyEvent.VK_LEFT] && moveDelay == 0)
+			{
+				currentPiece.moveLeft(board);
+				moveDelay = MOVE_DELAY;
+			}
+			if (keys[KeyEvent.VK_Z])
+			{
+				currentPiece.rotateCW(board);
+			}
+			if (keys[KeyEvent.VK_X])
+			{
+				currentPiece.rotateCCW(board);
+			}
+			
+			if (moveDelay > 0)
+			{
+				moveDelay--;
 			}
 		}
 	}
@@ -79,33 +104,15 @@ public class GamePanel extends JPanel implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		switch (arg0.getKeyCode())
-		{
-		case KeyEvent.VK_Z:
-			currentPiece.rotateCW(board);
-			break;
-		case KeyEvent.VK_X:
-			currentPiece.rotateCCW(board);
-			break;
-		case KeyEvent.VK_UP:
-			currentPiece.drop(board);
-			break;
-		case KeyEvent.VK_DOWN:
-			boardTick();
-			break;
-		case KeyEvent.VK_RIGHT:
-			currentPiece.moveRight(board);
-			break;
-		case KeyEvent.VK_LEFT:
-			currentPiece.moveLeft(board);
-			break;
-		}
+		keys[arg0.getKeyCode()] = true;
 		repaint();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{
+		keys[arg0.getKeyCode()] = false;
+		repaint();
 	}
 
 	@Override
